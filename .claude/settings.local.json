@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm -f src/main/java/com/yupi/yuaicodemother/controller/McpServerController.java src/main/java/com/yupi/yuaicodemother/model/entity/McpServer.java src/main/java/com/yupi/yuaicodemother/mapper/McpServerMapper.java src/main/java/com/yupi/yuaicodemother/model/dto/mcp/McpServerAddRequest.java src/main/java/com/yupi/yuaicodemother/model/dto/mcp/McpServerUpdateRequest.java src/main/java/com/yupi/yuaicodemother/model/dto/mcp/McpServerQueryRequest.java src/main/java/com/yupi/yuaicodemother/model/dto/mcp/McpToolInvokeRequest.java src/main/java/com/yupi/yuaicodemother/service/McpServerService.java src/main/java/com/yupi/yuaicodemother/service/McpToolInvokeService.java src/main/java/com/yupi/yuaicodemother/service/impl/McpServerServiceImpl.java src/main/java/com/yupi/yuaicodemother/service/impl/McpToolInvokeServiceImpl.java src/main/java/com/yupi/yuaicodemother/ai/tools/McpInvokeTool.java)",
+      "Bash(rmdir --ignore-fail-on-non-empty src/main/java/com/yupi/yuaicodemother/model/dto/mcp)"
+    ]
+  }
+}

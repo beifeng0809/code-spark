@@ -1,0 +1,130 @@
+spring:
+  application:
+    name: yu-ai-code-mother-backend
+  # session 配置
+  session:
+    store-type: redis
+    # session 30 天过期
+    timeout: 2592000
+  # mysql
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://101.200.215.154:3306/yu_ai_code_mother
+    username: SSM
+    password: 20281001
+  # redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      ttl: 3600
+  profiles:
+    active: local
+server:
+  port: 8123
+  servlet:
+    context-path: /api
+    # cookie 30 天过期
+    session:
+      cookie:
+        max-age: 2592000
+# springdoc-openapi
+springdoc:
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.yupi.yuaicodemother.controller
+# knife4j
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+# AI
+langchain4j:
+  open-ai:
+    chat-model:
+      base-url: http://10.126.56.22:11434/v1
+      api-key: <Your API Key>
+      model-name: qwen3.5:4b
+#      strict-json-schema: true
+#      response-format: json_object
+      max-tokens: 8192
+      log-requests: true
+      log-responses: true
+    streaming-chat-model:
+      base-url: http://10.126.56.22:11434/v1
+      api-key: <Your API Key>
+      model-name: qwen3.5:4b
+      max-tokens: 8192
+      log-requests: true
+      log-responses: true
+# 添加 COS 对象存储配置（需要从腾讯云获取）
+cos:
+  client:
+    host: your-custom-domain.com
+    secretId: your-secret-id
+    secretKey: your-secret-key
+    region: ap-shanghai
+    bucket: your-bucket-name
+# Pexels 图片搜索配置
+pexels:
+  api-key: <Your API Key>
+# 阿里云 DashScope 配置
+dashscope:
+  api-key: <Your API Key>
+  image-model: wan2.2-t2i-flash
+
+# RAG 配置（PGVector）
+rag:
+  embedding:
+    base-url: http://10.126.56.22:11434/v1
+    api-key: <Your API Key>
+    model-name: text-embedding-v4
+    dimension: 1536
+    timeout-ms: 8000
+  pgvector:
+    host: localhost
+    port: 5432
+    username: postgres
+    password: postgres
+    table: rag_knowledge_embedding
+    dimension: 1536
+    database: yu_ai_code_mother_rag
+  chunk:
+    # 单个 chunk 最大字符数，推荐 800（≈400 token，处于 embedding 模型最优区间）
+    max-segment-size: 800
+    # 相邻 chunk 重叠字符数，推荐 120（≈15% 重叠率，保证上下文连续性）
+    max-overlap-size: 120
+    # chunk 最小有效字符数，低于此值的碎片会合并到前一个 chunk
+    min-segment-size: 80
+    # 是否向每个 chunk 注入所属标题前缀（Contextual Header Injection）
+    add-context-header: true
+
+# MCP 工具配置
+# 接入 Fetch MCP，让 AI 在生成代码时可以主动抓取文档页面（MDN / npm / 组件库 API 等）
+mcp:
+  # 阿里云百炼 MCP —— 图像生成（用于 Logo 生成，优先于 DashScope SDK）
+  bailian:
+    image:
+      # 设为 true 后启用，同时需填写 sse-url
+      enabled: false
+      # 从百炼 MCP 广场（https://bailian.console.aliyun.com/#/mcp）获取 SSE 地址
+      # 搜索"图像生成"或"万象文生图"，点击"查看接入信息"复制 Endpoint
+      sse-url: https://mcp.aliyuncs.com/sse/xxx
+      # 鉴权使用 dashscope.api-key，无需额外配置
+      # 图像生成工具名，从服务详情页确认，默认为万象文生图
+      tool-name: wanx_text_to_image
+      # 图像生成耗时较长，超时设为 60 秒
+      timeout-seconds: 60
+  fetch:
+    # 设为 true 后才会启用，需要本机安装 Node.js 18+
+    enabled: false
+    # Stdio 模式（默认）：应用启动时自动通过 npx 拉起 MCP 子进程，无需额外配置
+    command: npx
+    args: -y,@modelcontextprotocol/server-fetch
+    # HTTP/SSE 模式（可选）：手动启动 MCP 服务后填入地址即可切换
+    # 启动命令：npx -y @modelcontextprotocol/server-fetch --port 3001
+    # sse-url: http://localhost:3001/sse
+    # 单次工具调用超时（秒）
+    timeout-seconds: 30
